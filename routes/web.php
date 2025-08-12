@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WebAuthController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,6 +70,11 @@ Route::middleware('auth')->group(function () {
         Route::resource('dashboard/roles', RoleController::class, ['as' => 'dashboard']);
         Route::patch('/dashboard/roles/{role}/toggle-status', [RoleController::class, 'toggleStatus'])->name('dashboard.roles.toggle');
     });
+    
+    // Sample CRUD routes
+    Route::resource('dashboard/products', ProductController::class, ['as' => 'dashboard']);
+    Route::resource('dashboard/categories', CategoryController::class, ['as' => 'dashboard']);
+    Route::resource('dashboard/orders', OrderController::class, ['as' => 'dashboard']);
     
     // Authentication routes
     Route::post('/logout', [WebAuthController::class, 'logout'])->name('logout');

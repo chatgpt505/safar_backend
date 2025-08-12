@@ -174,7 +174,7 @@ function toggleUserStatus(userId, userName) {
     if (confirm(`Toggle status for ${userName}?`)) {
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = `{{ route('dashboard.users.toggle', '') }}/${userId}`;
+        form.action = `/dashboard/users/${userId}/toggle-status`;
         
         const csrfToken = document.createElement('input');
         csrfToken.type = 'hidden';
@@ -197,7 +197,7 @@ function resetUserPassword(userId, userName) {
     if (confirm(`Reset password for ${userName}?`)) {
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = `{{ route('dashboard.users.reset', '') }}/${userId}`;
+        form.action = `/dashboard/users/${userId}/reset-password`;
         
         const csrfToken = document.createElement('input');
         csrfToken.type = 'hidden';
@@ -220,7 +220,7 @@ function deleteUser(userId, userName) {
     if (confirm(`Delete ${userName}? This action cannot be undone.`)) {
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = `{{ route('dashboard.users.delete', '') }}/${userId}`;
+        form.action = `/dashboard/users/${userId}`;
         
         const csrfToken = document.createElement('input');
         csrfToken.type = 'hidden';
@@ -241,7 +241,7 @@ function deleteUser(userId, userName) {
 
 function changeUserRole(userId, currentRole) {
     document.getElementById('new_role').value = currentRole;
-    document.getElementById('changeRoleForm').action = `{{ route('dashboard.users.update', '') }}/${userId}`;
+    document.getElementById('changeRoleForm').action = `/dashboard/users/${userId}`;
     document.getElementById('changeRoleModal').classList.remove('hidden');
 }
 </script>
