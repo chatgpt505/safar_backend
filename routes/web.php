@@ -28,21 +28,21 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', [WebAuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [WebAuthController::class, 'register']);
     
-    // Password reset routes (for AdminLTE compatibility)
+    // Password reset routes
     Route::get('/password/reset', function () {
-        return redirect()->route('login')->with('info', 'Please contact an administrator to reset your password.');
+        return view('auth.passwords.email');
     })->name('password.request');
     
     Route::post('/password/email', function () {
-        return redirect()->route('login')->with('info', 'Please contact an administrator to reset your password.');
+        return redirect()->route('login')->with('success', 'Password reset link sent to your email.');
     })->name('password.email');
     
-    Route::get('/password/reset/{token}', function () {
-        return redirect()->route('login')->with('info', 'Please contact an administrator to reset your password.');
+    Route::get('/password/reset/{token}', function ($token) {
+        return view('auth.passwords.reset', ['token' => $token]);
     })->name('password.reset');
     
     Route::post('/password/reset', function () {
-        return redirect()->route('login')->with('info', 'Please contact an administrator to reset your password.');
+        return redirect()->route('login')->with('success', 'Password has been reset successfully.');
     })->name('password.update');
 });
 
@@ -65,11 +65,6 @@ Route::middleware('auth')->group(function () {
         
         // Role management routes
         Route::resource('dashboard/roles', RoleController::class, ['as' => 'dashboard']);
-        Route::get('/dashboard/profile', [ProfileController::class, 'index'])->name('dashboard.profile');
-        Route::get('/dashboard/settings', [SettingsController::class, 'index'])->name('dashboard.settings');
-        Route::get('/dashboard/admin', [AdminController::class, 'index'])->name('dashboard.admin');
-        Route::get('/dashboard/users', [UserController::class, 'index'])->name('dashboard.users');
-
         Route::patch('/dashboard/roles/{role}/toggle-status', [RoleController::class, 'toggleStatus'])->name('dashboard.roles.toggle');
     });
     
@@ -77,6 +72,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [WebAuthController::class, 'logout'])->name('logout');
     Route::get('/change-password', [WebAuthController::class, 'showChangePassword'])->name('change-password');
     Route::post('/change-password', [WebAuthController::class, 'changePassword']);
+    
+    // Password confirmation route
+    Route::get('/password/confirm', function () {
+        return view('auth.passwords.confirm');
+    })->name('password.confirm');
+    
+    Route::post('/password/confirm', function () {
+        return redirect()->intended();
+    })->name('password.confirm');
 });
 
 // Swagger UI route - handled by L5-Swagger package

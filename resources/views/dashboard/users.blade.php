@@ -1,134 +1,136 @@
-@extends('adminlte::page')
+@extends('layouts.app')
 
 @section('title', 'User Management - Safar Backend')
 
-@section('content_header')
-    <h1>User Management</h1>
-@stop
-
 @section('content')
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Users</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createUserModal">
-                        <i class="fas fa-plus mr-1"></i> Add User
-                    </button>
-                </div>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Status</th>
-                                <th>Joined</th>
-                                <th style="width:280px">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($users as $u)
-                                <tr>
-                                    <td>{{ $u->name }}</td>
-                                    <td>{{ $u->email }}</td>
-                                    <td>
-                                        <span class="badge badge-secondary">{{ ucfirst($u->role) }}</span>
-                                        <button type="button" class="btn btn-xs btn-outline-primary ml-1" 
-                                                onclick="changeUserRole('{{ $u->_id }}', '{{ $u->role }}')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        @if($u->is_active)
-                                            <span class="badge badge-success">Active</span>
-                                        @else
-                                            <span class="badge badge-danger">Inactive</span>
-                                        @endif
-                                    </td>
-                                    <td>{{ $u->created_at->format('Y-m-d') }}</td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-sm btn-warning" 
-                                                    onclick="toggleUserStatus('{{ $u->_id }}', '{{ $u->name }}')">
-                                                <i class="fas fa-exchange-alt mr-1"></i> Toggle
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-secondary" 
-                                                    onclick="resetUserPassword('{{ $u->_id }}', '{{ $u->name }}')">
-                                                <i class="fas fa-key mr-1"></i> Reset
-                                            </button>
-                                            @if($u->role !== 'admin' || $u->_id !== auth()->id())
-                                            <button type="button" class="btn btn-sm btn-danger" 
-                                                    onclick="deleteUser('{{ $u->_id }}', '{{ $u->name }}')">
-                                                <i class="fas fa-trash mr-1"></i> Delete
-                                            </button>
-                                            @endif
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            @if(method_exists($users, 'links'))
-                <div class="card-footer clearfix">
-                    {{ $users->links() }}
-                </div>
-            @endif
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-900">User Management</h1>
+        <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium" 
+                onclick="document.getElementById('createUserModal').classList.remove('hidden')">
+            <i class="fas fa-plus mr-1"></i> Add User
+        </button>
+    </div>
+
+    <!-- Users Table -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach($users as $u)
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $u->name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $u->email }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    {{ ucfirst($u->role) }}
+                                </span>
+                                <button type="button" class="ml-1 text-blue-600 hover:text-blue-800" 
+                                        onclick="changeUserRole('{{ $u->_id }}', '{{ $u->role }}')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @if($u->is_active)
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        Active
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        Inactive
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $u->created_at->format('Y-m-d') }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                <button type="button" class="text-yellow-600 hover:text-yellow-800" 
+                                        onclick="toggleUserStatus('{{ $u->_id }}', '{{ $u->name }}')">
+                                    <i class="fas fa-exchange-alt mr-1"></i> Toggle
+                                </button>
+                                <button type="button" class="text-gray-600 hover:text-gray-800" 
+                                        onclick="resetUserPassword('{{ $u->_id }}', '{{ $u->name }}')">
+                                    <i class="fas fa-key mr-1"></i> Reset
+                                </button>
+                                @if($u->role !== 'admin' || $u->_id !== auth()->id())
+                                <button type="button" class="text-red-600 hover:text-red-800" 
+                                        onclick="deleteUser('{{ $u->_id }}', '{{ $u->name }}')">
+                                    <i class="fas fa-trash mr-1"></i> Delete
+                                </button>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
+        @if(method_exists($users, 'links'))
+            <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+                {{ $users->links() }}
+            </div>
+        @endif
     </div>
 </div>
 
 <!-- Create User Modal -->
-<div class="modal fade" id="createUserModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form action="{{ route('dashboard.users.store') }}" method="POST">
+<div id="createUserModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Create New User</h3>
+            <form action="{{ route('dashboard.users.store') }}" method="POST" class="space-y-4">
                 @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title">Create New User</h5>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span>
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                    <input type="text" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                           id="name" name="name" required>
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                           id="email" name="email" required>
+                </div>
+                <div>
+                    <label for="phone" class="block text-sm font-medium text-gray-700">Phone (Optional)</label>
+                    <input type="text" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                           id="phone" name="phone">
+                </div>
+                <div>
+                    <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+                    <select class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                            id="role" name="role" required>
+                        <option value="user">User</option>
+                        <option value="moderator">Moderator</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                           id="password" name="password" required>
+                </div>
+                <div>
+                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+                    <input type="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                           id="password_confirmation" name="password_confirmation" required>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md text-sm font-medium" 
+                            onclick="document.getElementById('createUserModal').classList.add('hidden')">
+                        Cancel
                     </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Phone (Optional)</label>
-                        <input type="text" class="form-control" id="phone" name="phone">
-                    </div>
-                    <div class="form-group">
-                        <label for="role">Role</label>
-                        <select class="form-control" id="role" name="role" required>
-                            <option value="user">User</option>
-                            <option value="moderator">Moderator</option>
-                            <option value="admin">Admin</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password_confirmation">Confirm Password</label>
-                        <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create User</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                        Create User
+                    </button>
                 </div>
             </form>
         </div>
@@ -136,39 +138,37 @@
 </div>
 
 <!-- Change Role Modal -->
-<div class="modal fade" id="changeRoleModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form id="changeRoleForm" method="POST">
+<div id="changeRoleModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Change User Role</h3>
+            <form id="changeRoleForm" method="POST" class="space-y-4">
                 @csrf
                 @method('PATCH')
-                <div class="modal-header">
-                    <h5 class="modal-title">Change User Role</h5>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span>
+                <div>
+                    <label for="new_role" class="block text-sm font-medium text-gray-700">New Role</label>
+                    <select class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                            id="new_role" name="role" required>
+                        <option value="user">User</option>
+                        <option value="moderator">Moderator</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md text-sm font-medium" 
+                            onclick="document.getElementById('changeRoleModal').classList.add('hidden')">
+                        Cancel
                     </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="new_role">New Role</label>
-                        <select class="form-control" id="new_role" name="role" required>
-                            <option value="user">User</option>
-                            <option value="moderator">Moderator</option>
-                            <option value="admin">Admin</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Change Role</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                        Change Role
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-@stop
 
-@section('js')
+@push('scripts')
 <script>
 function toggleUserStatus(userId, userName) {
     if (confirm(`Toggle status for ${userName}?`)) {
@@ -242,9 +242,10 @@ function deleteUser(userId, userName) {
 function changeUserRole(userId, currentRole) {
     document.getElementById('new_role').value = currentRole;
     document.getElementById('changeRoleForm').action = `{{ route('dashboard.users.update', '') }}/${userId}`;
-    $('#changeRoleModal').modal('show');
+    document.getElementById('changeRoleModal').classList.remove('hidden');
 }
 </script>
-@stop
+@endpush
+@endsection
 
 

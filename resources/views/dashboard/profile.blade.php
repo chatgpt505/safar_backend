@@ -1,14 +1,13 @@
-@extends('adminlte::page')
+@extends('layouts.app')
 
 @section('title', 'Profile - Safar Backend')
-@section('content_header')
-    <h1>Profile</h1>
-@endsection
 
 @section('content')
 <div class="space-y-6">
+    <h1 class="text-2xl font-bold text-gray-900">Profile</h1>
+    
     <div class="bg-white rounded-lg shadow p-6">
-        <h1 class="text-2xl font-bold text-gray-900 mb-6">Profile Information</h1>
+        <h2 class="text-xl font-bold text-gray-900 mb-6">Profile Information</h2>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
@@ -72,8 +71,4 @@
         </div>
     </div>
 </div>
-@endsection
-
-@section('js')
-<script src="https://cdn.tailwindcss.com"></script>
 @endsection

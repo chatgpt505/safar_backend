@@ -1,100 +1,87 @@
-@extends('adminlte::auth.login')
+@extends('layouts.app')
 
 @section('title', 'Login - Safar Backend')
 
-@section('auth_header', 'Sign in to start your session')
-
-@section('auth_body')
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
-        
-        <div class="input-group mb-3">
-            <input id="email" name="email" type="email" required 
-                   class="form-control @error('email') is-invalid @enderror"
-                   placeholder="Email" value="{{ old('email') }}" autofocus>
-            <div class="input-group-append">
-                <div class="input-group-text">
-                    <span class="fas fa-envelope"></span>
-                </div>
+@section('content')
+<div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="text-center">
+                <i class="fas fa-plane text-blue-600 text-4xl mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Sign in to Safar Backend</h2>
+                <p class="text-gray-600 mb-6">Enter your credentials to access your account</p>
             </div>
-            @error('email')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
-        </div>
 
-        <div class="input-group mb-3">
-            <input id="password" name="password" type="password" required 
-                   class="form-control @error('password') is-invalid @enderror"
-                   placeholder="Password">
-            <div class="input-group-append">
-                <div class="input-group-text">
-                    <span class="fas fa-lock"></span>
+            <form method="POST" action="{{ route('login') }}" class="space-y-4">
+                @csrf
+                
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                    <input id="email" name="email" type="email" required 
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('email') border-red-500 @enderror"
+                           placeholder="Enter your email" value="{{ old('email') }}" autofocus>
+                    @error('email')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
-            </div>
-            @error('password')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
-        </div>
 
-        <div class="row">
-            <div class="col-8">
-                <div class="icheck-primary">
-                    <input type="checkbox" id="remember" name="remember">
-                    <label for="remember">
-                        Remember Me
-                    </label>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input id="password" name="password" type="password" required 
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('password') border-red-500 @enderror"
+                           placeholder="Enter your password">
+                    @error('password')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
-            </div>
-            <div class="col-4">
-                <button type="submit" class="btn btn-primary btn-block">
+
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="remember" name="remember" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                        <label for="remember" class="ml-2 block text-sm text-gray-900">
+                            Remember me
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
                     Sign In
                 </button>
+            </form>
+
+            <div class="mt-6 text-center space-y-2">
+                <a href="{{ route('password.request') }}" class="text-blue-600 hover:text-blue-800 text-sm">
+                    <i class="fas fa-key mr-1"></i>
+                    Forgot your password?
+                </a>
+                <div>
+                    <a href="{{ route('register') }}" class="text-blue-600 hover:text-blue-800 text-sm">
+                        <i class="fas fa-user-plus mr-1"></i>
+                        Don't have an account? Register
+                    </a>
+                </div>
+            </div>
+
+            <!-- Demo Credentials Info -->
+            <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+                <h6 class="text-center font-semibold text-gray-700 mb-3">Demo Credentials</h6>
+                <div class="grid grid-cols-1 gap-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="font-medium">Admin:</span>
+                        <span class="text-gray-600">admin@safar.com / admin123</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-medium">User:</span>
+                        <span class="text-gray-600">user@safar.com / user123</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-medium">Moderator:</span>
+                        <span class="text-gray-600">moderator@safar.com / moderator123</span>
+                    </div>
+                </div>
             </div>
         </div>
-    </form>
-@stop
-
-@section('auth_footer')
-    <p class="mb-1">
-        <a href="{{ route('password.request') }}">
-            I forgot my password
-        </a>
-    </p>
-    <p class="mb-0">
-        <a href="{{ route('register') }}" class="text-center">
-            Register a new membership
-        </a>
-    </p>
-@stop
-
-@section('js')
-<script>
-// Demo credentials info
-document.addEventListener('DOMContentLoaded', function() {
-    const footer = document.querySelector('.login-box');
-    if (footer) {
-        const demoInfo = document.createElement('div');
-        demoInfo.className = 'mt-3 p-3 bg-light rounded';
-        demoInfo.innerHTML = `
-            <h6 class="text-center mb-2"><strong>Demo Credentials</strong></h6>
-            <div class="row text-center">
-                <div class="col-md-4">
-                    <small><strong>Admin:</strong><br>admin@safar.com / admin123</small>
-                </div>
-                <div class="col-md-4">
-                    <small><strong>User:</strong><br>user@safar.com / user123</small>
-                </div>
-                <div class="col-md-4">
-                    <small><strong>Moderator:</strong><br>moderator@safar.com / moderator123</small>
-                </div>
-            </div>
-        `;
-        footer.appendChild(demoInfo);
-    }
-});
-</script>
-@stop
+    </div>
+</div>
+@endsection

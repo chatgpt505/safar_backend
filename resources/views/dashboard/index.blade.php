@@ -1,9 +1,6 @@
-@extends('adminlte::page')
+@extends('layouts.app')
 
 @section('title', 'Dashboard - Safar Backend')
-@section('content_header')
-    <h1>Dashboard</h1>
-@endsection
 
 @section('content')
 <div class="space-y-6">
@@ -101,7 +98,7 @@
                 </div>
             </a>
 
-                                    <a href="{{ url('api/documentation') }}" target="_blank" class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
+            <a href="{{ url('api/documentation') }}" target="_blank" class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
                 <i class="fas fa-book text-green-600 mr-3"></i>
                 <div>
                     <p class="font-medium text-gray-900">API Documentation</p>
@@ -135,8 +132,4 @@
     </div>
     @endif
 </div>
-@endsection
-
-@section('js')
-<script src="https://cdn.tailwindcss.com"></script>
 @endsection

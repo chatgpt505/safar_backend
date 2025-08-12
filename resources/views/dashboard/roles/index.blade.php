@@ -1,119 +1,106 @@
-@extends('adminlte::page')
+@extends('layouts.app')
 
 @section('title', 'Role Management - Safar Backend')
 
-@section('content_header')
-    <h1>Role Management</h1>
-@stop
-
 @section('content')
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Roles</h3>
-                <div class="card-tools">
-                    <a href="{{ route('dashboard.roles.create') }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-plus mr-1"></i> Create Role
-                    </a>
-                </div>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Display Name</th>
-                                <th>Description</th>
-                                <th>Users</th>
-                                <th>Status</th>
-                                <th style="width:200px">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($roles as $role)
-                                <tr>
-                                    <td>
-                                        <code>{{ $role->name }}</code>
-                                    </td>
-                                    <td>{{ $role->display_name }}</td>
-                                    <td>{{ $role->description ?: 'No description' }}</td>
-                                    <td>
-                                        <span class="badge badge-info">{{ $role->users_count }}</span>
-                                    </td>
-                                    <td>
-                                        @if($role->is_active)
-                                            <span class="badge badge-success">Active</span>
-                                        @else
-                                            <span class="badge badge-danger">Inactive</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <a href="{{ route('dashboard.roles.show', $role) }}" 
-                                               class="btn btn-sm btn-info">
-                                                <i class="fas fa-eye mr-1"></i> View
-                                            </a>
-                                            <a href="{{ route('dashboard.roles.edit', $role) }}" 
-                                               class="btn btn-sm btn-warning">
-                                                <i class="fas fa-edit mr-1"></i> Edit
-                                            </a>
-                                            @if(!in_array($role->name, ['admin', 'moderator', 'user']))
-                                                <button type="button" class="btn btn-sm btn-secondary" 
-                                                        onclick="toggleRoleStatus('{{ $role->id }}', '{{ $role->name }}')">
-                                                    <i class="fas fa-exchange-alt mr-1"></i> Toggle
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-danger" 
-                                                        onclick="deleteRole('{{ $role->id }}', '{{ $role->name }}')">
-                                                    <i class="fas fa-trash mr-1"></i> Delete
-                                                </button>
-                                            @endif
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            @if(method_exists($roles, 'links'))
-                <div class="card-footer clearfix">
-                    {{ $roles->links() }}
-                </div>
-            @endif
-        </div>
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-900">Role Management</h1>
+        <a href="{{ route('dashboard.roles.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+            <i class="fas fa-plus mr-2"></i> Create Role
+        </a>
     </div>
-</div>
 
-<!-- Permissions Overview -->
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Available Permissions</h3>
+    <!-- Roles Table -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Display Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Users</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach($roles as $role)
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <code class="text-sm bg-gray-100 px-2 py-1 rounded">{{ $role->name }}</code>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $role->display_name }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">{{ $role->description ?: 'No description' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    {{ $role->users_count }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @if($role->is_active)
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        Active
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        Inactive
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                <a href="{{ route('dashboard.roles.show', $role) }}" 
+                                   class="text-blue-600 hover:text-blue-800">
+                                    <i class="fas fa-eye mr-1"></i> View
+                                </a>
+                                <a href="{{ route('dashboard.roles.edit', $role) }}" 
+                                   class="text-yellow-600 hover:text-yellow-800">
+                                    <i class="fas fa-edit mr-1"></i> Edit
+                                </a>
+                                @if(!in_array($role->name, ['admin', 'moderator', 'user']))
+                                    <button type="button" class="text-gray-600 hover:text-gray-800" 
+                                            onclick="toggleRoleStatus('{{ $role->id }}', '{{ $role->name }}')">
+                                        <i class="fas fa-exchange-alt mr-1"></i> Toggle
+                                    </button>
+                                    <button type="button" class="text-red-600 hover:text-red-800" 
+                                            onclick="deleteRole('{{ $role->id }}', '{{ $role->name }}')">
+                                        <i class="fas fa-trash mr-1"></i> Delete
+                                    </button>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        @if(method_exists($roles, 'links'))
+            <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+                {{ $roles->links() }}
             </div>
-            <div class="card-body">
-                @foreach($permissions as $group => $groupPermissions)
-                    <div class="mb-4">
-                        <h5 class="text-capitalize">{{ $group }}</h5>
-                        <div class="row">
-                            @foreach($groupPermissions as $permission)
-                                <div class="col-md-4 mb-2">
-                                    <span class="badge badge-secondary">{{ $permission->display_name }}</span>
-                                    <small class="text-muted d-block">{{ $permission->name }}</small>
-                                </div>
-                            @endforeach
+        @endif
+    </div>
+
+    <!-- Permissions Overview -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Available Permissions</h3>
+        @foreach($permissions as $group => $groupPermissions)
+            <div class="mb-6">
+                <h4 class="text-md font-medium text-gray-900 mb-3 capitalize">{{ $group }}</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    @foreach($groupPermissions as $permission)
+                        <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span class="text-sm text-gray-700">{{ $permission->display_name ?: $permission->name }}</span>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
-        </div>
+        @endforeach
     </div>
 </div>
-@stop
 
-@section('js')
+@push('scripts')
 <script>
 function toggleRoleStatus(roleId, roleName) {
     if (confirm(`Toggle status for role "${roleName}"?`)) {
@@ -161,4 +148,5 @@ function deleteRole(roleId, roleName) {
     }
 }
 </script>
-@stop
+@endpush
+@endsection
