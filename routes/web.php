@@ -91,4 +91,22 @@ Route::middleware('auth')->group(function () {
     })->name('password.confirm');
 });
 
-// Swagger UI route - handled by L5-Swagger package
+// Auto-generated Swagger documentation routes
+Route::get('/api/documentation/auto', [App\Http\Controllers\AutoSwaggerController::class, 'ui'])->name('api.documentation.auto');
+Route::get('/api/documentation/auto.json', [App\Http\Controllers\AutoSwaggerController::class, 'json'])->name('api.documentation.auto.json');
+Route::get('/api/documentation/auto.yaml', [App\Http\Controllers\AutoSwaggerController::class, 'yaml'])->name('api.documentation.auto.yaml');
+
+// Test route to generate and view auto documentation
+Route::get('/test-auto-swagger', function () {
+    $swaggerService = app(\App\Services\AutoSwaggerService::class);
+    $documentation = $swaggerService->generateDocumentation();
+    
+    return response()->json([
+        'message' => 'Auto-generated Swagger documentation test',
+        'total_endpoints' => count($documentation['paths']),
+        'endpoints' => array_keys($documentation['paths']),
+        'documentation' => $documentation
+    ]);
+})->name('test.auto.swagger');
+
+// Original Swagger UI route - handled by L5-Swagger package

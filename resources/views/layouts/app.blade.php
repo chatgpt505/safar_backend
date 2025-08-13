@@ -122,7 +122,11 @@
                     
                     <a href="{{ url('api/documentation') }}" class="flex items-center px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-dark-700 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg transition-colors" target="_blank">
                         <i class="fas fa-book mr-3"></i>
-                        <span>API Docs</span>
+                        <span>API Docs (Manual)</span>
+                    </a>
+                    <a href="{{ url('api/documentation/auto') }}" class="flex items-center px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-dark-700 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg transition-colors" target="_blank">
+                        <i class="fas fa-magic mr-3"></i>
+                        <span>API Docs (Auto)</span>
                     </a>
                     
                     <!-- Sample CRUD Links -->

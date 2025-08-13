@@ -9,49 +9,14 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 /**
- * @OA\Tag(
- *     name="Admin",
- *     description="Admin management endpoints"
- * )
+ * Admin Controller
+ * 
+ * Handles admin-specific operations like user management
  */
 class AdminController extends Controller
 {
     /**
      * Get all users (admin only)
-     * 
-     * @OA\Get(
-     *     path="/admin/users",
-     *     summary="Get all users",
-     *     tags={"Admin"},
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(
-     *         name="page",
-     *         in="query",
-     *         description="Page number",
-     *         required=false,
-     *         @OA\Schema(type="integer", default=1)
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Users retrieved successfully",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(
-     *                 property="data",
-     *                 type="object",
-     *                 @OA\Property(property="users", type="object")
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized"
-     *     ),
-     *     @OA\Response(
-     *         response=403,
-     *         description="Insufficient permissions"
-     *     )
-     * )
      */
     public function getAllUsers(Request $request): JsonResponse
     {
@@ -67,36 +32,6 @@ class AdminController extends Controller
 
     /**
      * Get user by ID (admin only)
-     * 
-     * @OA\Get(
-     *     path="/admin/users/{id}",
-     *     summary="Get user by ID",
-     *     tags={"Admin"},
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="User ID",
-     *         required=true,
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="User retrieved successfully",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(
-     *                 property="data",
-     *                 type="object",
-     *                 @OA\Property(property="user", type="object")
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="User not found"
-     *     )
-     * )
      */
     public function getUserById(Request $request, $id): JsonResponse
     {
@@ -119,42 +54,6 @@ class AdminController extends Controller
 
     /**
      * Create new user (admin only)
-     * 
-     * @OA\Post(
-     *     path="/admin/users",
-     *     summary="Create new user",
-     *     tags={"Admin"},
-     *     security={{"bearerAuth":{}}},
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             required={"name","email","password","role"},
-     *             @OA\Property(property="name", type="string", example="New User"),
-     *             @OA\Property(property="email", type="string", format="email", example="newuser@example.com"),
-     *             @OA\Property(property="password", type="string", format="password", example="password123"),
-     *             @OA\Property(property="phone", type="string", example="+1234567890"),
-     *             @OA\Property(property="role", type="string", enum={"user","admin","moderator"}, example="user"),
-     *             @OA\Property(property="is_active", type="boolean", example=true)
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=201,
-     *         description="User created successfully",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="message", type="string", example="User created successfully"),
-     *             @OA\Property(
-     *                 property="data",
-     *                 type="object",
-     *                 @OA\Property(property="user", type="object")
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation failed"
-     *     )
-     * )
      */
     public function createUser(Request $request): JsonResponse
     {
@@ -195,51 +94,8 @@ class AdminController extends Controller
 
     /**
      * Update user (admin only)
-     * 
-     * @OA\Put(
-     *     path="/admin/users/{id}",
-     *     summary="Update user",
-     *     tags={"Admin"},
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="User ID",
-     *         required=true,
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\RequestBody(
-     *         required=false,
-     *         @OA\JsonContent(
-     *             @OA\Property(property="name", type="string", example="Updated Name"),
-     *             @OA\Property(property="email", type="string", format="email", example="updated@example.com"),
-     *             @OA\Property(property="phone", type="string", example="+0987654321"),
-     *             @OA\Property(property="role", type="string", enum={"user","admin","moderator"}, example="moderator"),
-     *             @OA\Property(property="is_active", type="boolean", example=false)
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="User updated successfully",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="message", type="string", example="User updated successfully"),
-     *             @OA\Property(
-     *                 property="data",
-     *                 type="object",
-     *                 @OA\Property(property="user", type="object")
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="User not found"
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation failed"
-     *     )
-     * )
+     */
+
      */
     public function updateUser(Request $request, $id): JsonResponse
     {
@@ -281,36 +137,6 @@ class AdminController extends Controller
 
     /**
      * Delete user (admin only)
-     * 
-     * @OA\Delete(
-     *     path="/admin/users/{id}",
-     *     summary="Delete user",
-     *     tags={"Admin"},
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="User ID",
-     *         required=true,
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="User deleted successfully",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="message", type="string", example="User deleted successfully")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Cannot delete your own account"
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="User not found"
-     *     )
-     * )
      */
     public function deleteUser(Request $request, $id): JsonResponse
     {
@@ -341,41 +167,6 @@ class AdminController extends Controller
 
     /**
      * Toggle user active status (admin only)
-     * 
-     * @OA\Patch(
-     *     path="/admin/users/{id}/toggle-status",
-     *     summary="Toggle user active status",
-     *     tags={"Admin"},
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="User ID",
-     *         required=true,
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="User status updated successfully",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="message", type="string", example="User status updated successfully"),
-     *             @OA\Property(
-     *                 property="data",
-     *                 type="object",
-     *                 @OA\Property(property="user", type="object")
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Cannot deactivate your own account"
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="User not found"
-     *     )
-     * )
      */
     public function toggleUserStatus(Request $request, $id): JsonResponse
     {
@@ -411,43 +202,8 @@ class AdminController extends Controller
 
     /**
      * Reset user password (admin only)
-     * 
-     * @OA\Post(
-     *     path="/admin/users/{id}/reset-password",
-     *     summary="Reset user password",
-     *     tags={"Admin"},
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="User ID",
-     *         required=true,
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             required={"new_password"},
-     *             @OA\Property(property="new_password", type="string", format="password", example="newpassword123")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="User password reset successfully",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="message", type="string", example="User password reset successfully")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="User not found"
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation failed"
-     *     )
-     * )
+     */
+
      */
     public function resetUserPassword(Request $request, $id): JsonResponse
     {
@@ -484,43 +240,6 @@ class AdminController extends Controller
 
     /**
      * Get users by role (admin only)
-     * 
-     * @OA\Get(
-     *     path="/admin/users/role/{role}",
-     *     summary="Get users by role",
-     *     tags={"Admin"},
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(
-     *         name="role",
-     *         in="path",
-     *         description="User role",
-     *         required=true,
-     *         @OA\Schema(type="string", enum={"user","admin","moderator"})
-     *     ),
-     *     @OA\Parameter(
-     *         name="page",
-     *         in="query",
-     *         description="Page number",
-     *         required=false,
-     *         @OA\Schema(type="integer", default=1)
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Users retrieved successfully",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(
-     *                 property="data",
-     *                 type="object",
-     *                 @OA\Property(property="users", type="object")
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Invalid role"
-     *     )
-     * )
      */
     public function getUsersByRole(Request $request, $role): JsonResponse
     {
